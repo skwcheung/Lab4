@@ -41,10 +41,9 @@ void worst_fit_create_node(node_t* node, node_t* new_node){
 		new_node -> mem_size = ((intptr_t)head -> end_of_mem) - ((intptr_t)new_node + sizeof(node_t));
 	else
 		new_node -> mem_size = (new_node -> next_node) - ((intptr_t)new_node + sizeof(node_t));		
-	int offset_four_byte = ((intptr_t)new_node) % 4;		
-	printf("Offset is %d \n", offset_four_byte);
-	new_node -> mem_start = (intptr_t)new_node + sizeof(node_t);
-	new_node -> mem_size += offset_four_byte;
+	int offset_four_byte = ((intptr_t)new_node) % 4; // New node has already been previous node + size + size of node (so now see if we need to add any offset so next will start byte aligned)
+	new_node -> mem_start = (intptr_t)new_node + sizeof(node_t); // The start of new node is just its start address plus node
+	new_node -> mem_size += offset_four_byte; // Add the offset so the size
 	node -> next_node = new_node;	
 
 	node->mem_size = ((intptr_t)new_node - (intptr_t)node->mem_start) + offset_four_byte;
