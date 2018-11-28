@@ -36,14 +36,19 @@ void worst_fit_create_node(node_t* node, node_t* new_node){
 	new_node -> next_node = node -> next_node;
 	new_node -> prev_node = node;
 	new_node -> filled = 0;
-	
-	if(node -> next_node == NULL)
+	         
+	if(node -> next_node == NULL){
 		new_node -> mem_size = ((intptr_t)head -> end_of_mem) - ((intptr_t)new_node + sizeof(node_t));
+		printf("Next node is null, new_nodes next is %d \n",new_node->next_node);
+	}
+		
 	else
-		new_node -> mem_size = (new_node -> next_node) - ((intptr_t)new_node + sizeof(node_t));		
+	new_node -> mem_size = (new_node -> next_node) - ((intptr_t)new_node + sizeof(node_t));		
 	int offset_four_byte = ((intptr_t)new_node) % 4; // New node has already been previous node + size + size of node (so now see if we need to add any offset so next will start byte aligned)
+	printf("New node is to be %d and offset is %d\n",new_node,offset_four_byte);
+	new_node = (unsigned long)new_node + offset_four_byte;
 	new_node -> mem_start = (intptr_t)new_node + sizeof(node_t); // The start of new node is just its start address plus node
-	new_node -> mem_size += offset_four_byte; // Add the offset so the size
+	new_node -> mem_size -= offset_four_byte; // Add the offset so the size
 	node -> next_node = new_node;	
 
 	node->mem_size = ((intptr_t)new_node - (intptr_t)node->mem_start) + offset_four_byte;
@@ -56,7 +61,15 @@ void print_mem(){
 	while(itr != NULL){
 		printf("Current node %d is filled: %d and mem_size: %d next_node is: %d \n", itr,itr->filled,itr->mem_size,itr->next_node);
 		printf("Difference in nodes is %d \n",(intptr_t)itr->next_node - (intptr_t)(itr->mem_start));
-		itr = itr->next_node;
+		printf("Check if %d is null \n",itr->next_node);
+		if(itr->next_node != 0){
+			printf("itr is %d\n ",itr);
+			itr = itr->next_node;
+			if(itr->next_node == 0){
+				printf("Is NULL \n");
+				break;
+			}
+		}
 	}
 }
 
@@ -79,11 +92,11 @@ int worst_fit_memory_init(size_t size)
 		
 	
 	worst_fit_mem_start = malloc(size);
-	printf("Start of memory is located at %x \n",worst_fit_mem_start);
+	printf("Start of memory is located at %d \n",worst_fit_mem_start);
 	head_t* head = worst_fit_mem_start;
 	head->first_node = sizeof(head_t) + worst_fit_mem_start;
 	head->end_of_mem = worst_fit_mem_start + size;
-	printf("End of memory is located at %x \n",head->end_of_mem);
+	printf("End of memory is located at %d \n",head->end_of_mem);
 	node_t* first_node = head->first_node;
 	first_node -> next_node = NULL;
 	first_node -> prev_node = NULL;
@@ -91,8 +104,8 @@ int worst_fit_memory_init(size_t size)
 	first_node -> mem_size = size - (sizeof(head_t) + sizeof(node_t));
 	first_node -> filled = 0;
 
-	printf(" \n ===============  First memory location available at %x with space %d ================ \n\n",first_node->mem_start,first_node->mem_size);
-	// printf("Size of head %d and size of node %d \n",sizeof(head_t),sizeof(node_t));
+	// printf(" \n ===============  First memory location available at %x with space %d ================ \n\n",first_node->mem_start,first_node->mem_size);
+	printf("Size of head %d and size of node %d \n",sizeof(head_t),sizeof(node_t));
 	return 0;
 
 }
@@ -133,7 +146,7 @@ void *worst_fit_alloc(size_t size)
 		new_node->mem_size = head->end_of_mem - new_node->mem_start;
 		new_node->filled = 0;
 
-		printf("Created first node %d with size %d and with the next node occuring at %d \n",itr,size,itr->next_node);
+		printf("Created first node %d with size %d and with the next node occuring at %d \n",(unsigned long)itr,size,(unsigned long)(itr->next_node));
 		return itr;
 	}
 	// Loop to search for largest available memory location
