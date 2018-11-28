@@ -33,40 +33,35 @@ typedef struct head{
 void worst_fit_create_node(node_t* node, node_t* new_node){
 	head_t* head = worst_fit_mem_start;
 	node->filled = 1;
+	int offset_four_byte = ((intptr_t)new_node) % 4; // New node has already been previous node + size + size of node (so now see if we need to add any offset so next will start byte aligned)
+	new_node = (intptr_t)new_node + offset_four_byte; //Offset the new node pointer before assigning stuff OR else it will segfault!!
 	new_node -> next_node = node -> next_node;
 	new_node -> prev_node = node;
 	new_node -> filled = 0;
-	         
+
 	if(node -> next_node == NULL){
 		new_node -> mem_size = ((intptr_t)head -> end_of_mem) - ((intptr_t)new_node + sizeof(node_t));
-		printf("Next node is null, new_nodes next is %d \n",new_node->next_node);
 	}
-		
-	else
-	new_node -> mem_size = (new_node -> next_node) - ((intptr_t)new_node + sizeof(node_t));		
-	int offset_four_byte = ((intptr_t)new_node) % 4; // New node has already been previous node + size + size of node (so now see if we need to add any offset so next will start byte aligned)
-	printf("New node is to be %d and offset is %d\n",new_node,offset_four_byte);
-	new_node = (unsigned long)new_node + offset_four_byte;
+	else{
+		new_node -> mem_size = (new_node -> next_node) - ((intptr_t)new_node + sizeof(node_t));		
+	}	
 	new_node -> mem_start = (intptr_t)new_node + sizeof(node_t); // The start of new node is just its start address plus node
 	new_node -> mem_size -= offset_four_byte; // Add the offset so the size
-	node -> next_node = new_node;	
 
+	node -> next_node = new_node;	
 	node->mem_size = ((intptr_t)new_node - (intptr_t)node->mem_start) + offset_four_byte;
-	// printf("Node next node was: %d and the mem size is %d \n", new_node->next_node,new_node->mem_size);
 }
 
 void print_mem(){
 	head_t* head = worst_fit_mem_start;
 	node_t* itr = head->first_node;
 	while(itr != NULL){
-		printf("Current node %d is filled: %d and mem_size: %d next_node is: %d \n", itr,itr->filled,itr->mem_size,itr->next_node);
+		printf("Current mem_start is %d is filled: %d and mem_size: %d next_node is: %d \n", itr->mem_start,itr->filled,itr->mem_size,itr->next_node);
 		printf("Difference in nodes is %d \n",(intptr_t)itr->next_node - (intptr_t)(itr->mem_start));
-		printf("Check if %d is null \n",itr->next_node);
 		if(itr->next_node != 0){
-			printf("itr is %d\n ",itr);
 			itr = itr->next_node;
 			if(itr->next_node == 0){
-				printf("Is NULL \n");
+				printf("Current node %d is filled: %d and mem_size: %d next_node is: %d \n", itr,itr->filled,itr->mem_size,itr->next_node);
 				break;
 			}
 		}
@@ -136,8 +131,10 @@ void *worst_fit_alloc(size_t size)
 			return 1;
 		}
 		itr->next_node = (intptr_t)itr + size + sizeof(node_t);
+		int offset_four_byte = ((intptr_t)itr->next_node) % 4;
+		itr->next_node = (intptr_t)(itr->next_node) + 2;
 		itr->mem_start = (intptr_t)itr + sizeof(node_t);
-		itr->mem_size = size;
+		itr->mem_size = size + offset_four_byte;
 		itr->filled = 1;
 		new_node = itr->next_node;
 		new_node->next_node = NULL;
