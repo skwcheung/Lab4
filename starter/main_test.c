@@ -22,9 +22,9 @@ int main(int argc, char *argv[])
 	worst_fit_memory_init(1024);
 	worst_fit_alloc(10);
 	print_mem();
-	worst_fit_alloc(20);
+	void* ptr3 = worst_fit_alloc(20);
 	print_mem();
-	worst_fit_alloc(30);
+	void* ptr2 = worst_fit_alloc(30);
 	print_mem();
 	worst_fit_alloc(31);
 	print_mem();
@@ -35,9 +35,16 @@ int main(int argc, char *argv[])
 	printf("Attempt to deallocate pointer \n");
 	worst_fit_dealloc(ptr);
 	print_mem();
+	worst_fit_dealloc(ptr2);
+	print_mem();
 	worst_fit_alloc(69);
 	print_mem();
-	// print_mem();
+	void* ptr4 = worst_fit_alloc(12);
+	print_mem();
+	worst_fit_dealloc(ptr3);
+	print_mem();
+	worst_fit_dealloc(ptr4);
+	print_mem();
 	// int num = 0;
 	// int algo = 0; // default algorithm to test is best fit  
 	// void *p, *q;

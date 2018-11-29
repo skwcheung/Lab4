@@ -54,6 +54,12 @@ void worst_fit_create_node(node_t* node, node_t* new_node,size_t size){
 	node->mem_size = ((intptr_t)new_node - (intptr_t)node->mem_start);
 }
 
+void combine_nodes(node_t* node, node_t* second_node){
+	node->next_node = second_node->next_node;
+	node->next_node->prev_node = second_node;
+	node->mem_size = (intptr_t)(node->mem_size) + sizeof(node_t) + second_node->mem_size;
+}
+
 void print_mem(){
 	head_t* head = worst_fit_mem_start;
 	node_t* itr = head->first_node;
@@ -171,6 +177,9 @@ void *worst_fit_alloc(size_t size)
 		node_t* new_node = (intptr_t)itr + sizeof(node_t) + size;
 		printf("Creating new node with size %d \n",size);
 		int offset_four_byte = 4 - (size % 4); // New node has already been previous node + size + size of node (so now see if we need to add any offset so next will start byte aligned)
+		if(offset_four_byte == 4){
+			offset_four_byte = 0;
+		}
 		new_node = (intptr_t)new_node + offset_four_byte; 
 		worst_fit_create_node(itr,new_node,size+offset_four_byte);
 		printf("===================== FINISH ALLOC =================== \n");
@@ -190,6 +199,7 @@ void best_fit_dealloc(void *ptr)
 
 void worst_fit_dealloc(void *ptr) 
 {
+	printf("===================== START DEALLOC =================== \n");
 	head_t* head = worst_fit_mem_start;
 	node_t* itr = head->first_node;
 	if((ptr < head) || (ptr > head->end_of_mem)){
@@ -201,13 +211,16 @@ void worst_fit_dealloc(void *ptr)
 		if(itr->mem_start == ptr){
 			printf("SUCCESS: Deallocated ptr %d \n",ptr);
 			itr->filled = 0;
+			if((itr->filled == 0) && (itr->next_node->filled == 0)){ // Checking for consecutive unfilled memory spaces to join
+				combine_nodes(itr,itr->next_node);
+				printf("SUCCESS: Combined two empty adjacent spaces \n");
+			}
+			printf("===================== FINISH DEALLOC =================== \n");
 			return;
 		}
 		itr = itr->next_node;
 	}
-
-
-
+	printf("===================== FINISH DEALLOC =================== \n");	
 	return;
 }
 
