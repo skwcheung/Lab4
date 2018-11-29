@@ -19,14 +19,17 @@
 
 int main(int argc, char *argv[])
 {
-	worst_fit_memory_init(1024);
+	worst_fit_memory_init(100);
 	worst_fit_alloc(10);
 	print_mem();
 	worst_fit_alloc(20);
 	print_mem();
 	worst_fit_alloc(30);
+	print_mem();
 	worst_fit_alloc(31);
+	print_mem();
 	worst_fit_alloc(32);
+	print_mem();
 	worst_fit_alloc(33);
 	print_mem();
 	// print_mem();
