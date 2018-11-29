@@ -22,11 +22,13 @@ int main(int argc, char *argv[])
 	worst_fit_memory_init(1024);
 	worst_fit_alloc(10);
 	print_mem();
-	printf("one \n");
 	worst_fit_alloc(20);
 	print_mem();
-	printf("Done \n");
-	// worst_fit_alloc(30);
+	worst_fit_alloc(30);
+	worst_fit_alloc(31);
+	worst_fit_alloc(32);
+	worst_fit_alloc(33);
+	print_mem();
 	// print_mem();
 	// int num = 0;
 	// int algo = 0; // default algorithm to test is best fit  
