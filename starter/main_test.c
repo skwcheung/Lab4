@@ -19,17 +19,71 @@
 
 int main(int argc, char *argv[])
 {
+	// BASIC BEST TEST
+	best_fit_memory_init(2000);
+	best_fit_alloc(10);
+	printf("Attempting a print mem \n");
+	print_mem(0);
+	void* ptr3 = best_fit_alloc(20);
+	print_mem(0);
+	void* ptr2 = best_fit_alloc(30);
+	print_mem(0);
+	best_fit_alloc(31);
+	print_mem(0);
+	void* ptr = best_fit_alloc(521);
+	print_mem(0);
+	best_fit_alloc(33);
+	print_mem(0);
+	printf("Attempt to deallocate pointer \n");
+	best_fit_dealloc(ptr);
+	print_mem(0);
+	best_fit_dealloc(ptr2);
+	print_mem(0);
+	best_fit_alloc(69);
+	print_mem(0);
+	void* ptr4 = best_fit_alloc(12);
+	print_mem(0);
+	best_fit_dealloc(ptr3);
+	print_mem(0);
+	best_fit_dealloc(ptr4);
+	print_mem(0);
+	int external = best_fit_count_extfrag(400);
+	printf("Defragged spaces is %d \n",external);
+
+	// BASIC WORST TEST
 	// worst_fit_memory_init(1024);
 	// worst_fit_alloc(10);
-	// print_mem();
-	// worst_fit_alloc(20);
-	// print_mem();
-	// worst_fit_alloc(30);
-	// print_mem();
+	// print_mem(1);
+	// void* ptr3 = worst_fit_alloc(20);
+	// print_mem(1);
+	// void* ptr2 = worst_fit_alloc(30);
+	// print_mem(1);
+	// worst_fit_alloc(31);
+	// print_mem(1);
+	// void* ptr = worst_fit_alloc(521);
+	// print_mem(1);
+	// worst_fit_alloc(33);
+	// print_mem(1);
+	// printf("Attempt to deallocate pointer \n");
+	// worst_fit_dealloc(ptr);
+	// print_mem(1);
+	// worst_fit_dealloc(ptr2);
+	// print_mem(1);
+	// worst_fit_alloc(69);
+	// print_mem(1);
+	// void* ptr4 = worst_fit_alloc(12);
+	// print_mem(1);
+	// worst_fit_dealloc(ptr3);
+	// print_mem(1);
+	// worst_fit_dealloc(ptr4);
+	// print_mem(1);
+	// int external = worst_fit_count_extfrag(400);
+	// printf("Defragged spaces is %d \n",external);
 
-	int num = 0;
-	int algo = 0; // default algorithm to test is best fit  
-	void *p, *q;
+
+	// int num = 0;
+	// int algo = 0; // default algorithm to test is best fit  
+	// void *p, *q;
 
 	if (argc != 2) {
 		fprintf(stderr, "Usage: %s <0/1>. 0 for best fit and 1 for worst fit \n", argv[0]);
