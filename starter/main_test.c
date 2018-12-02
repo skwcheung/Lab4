@@ -104,7 +104,7 @@ void test_3(void** pointers, enum test_type best_or_worst){
 	int i, j = 0;
 	int random_size;
 	double frag_size1, frag_size25, frag_size50 = 0;
-	for(; i < 50; ++i){
+	for(; i < 100; ++i){
 		printf("%d", i);
 		random_size = rand() % 100 + 1;
 		for(; j < 12; ++j){
@@ -158,7 +158,7 @@ void test_4(void** pointers, enum test_type best_or_worst){
 	int i = 0; 
 	void* most_recent_alloc;
 	double frag_size1, frag_size25, frag_size50 = 0;
-	for(; i < 50 ; ++i){
+	for(; i < 100 ; ++i){
 		number = 1;
 		if(best_or_worst == best_fit){
 			pointers[0] = best_fit_alloc(100);
@@ -169,7 +169,6 @@ void test_4(void** pointers, enum test_type best_or_worst){
 			most_recent_alloc = pointers[0];
 		}
 		printf("before while\n");
-		sleep(1);
 		while(most_recent_alloc != NULL){
 			if(best_or_worst == best_fit){
 				pointers[number] = best_fit_alloc(100);
@@ -183,7 +182,6 @@ void test_4(void** pointers, enum test_type best_or_worst){
 			}
 		}
 		printf("after while\n");
-		sleep(1);
 		if(best_or_worst == best_fit){
 			best_fit_dealloc(pointers[0]);
 			best_fit_dealloc(pointers[2]);
@@ -239,7 +237,7 @@ void test_5(void** pointers, enum test_type best_or_worst){
 	int i = 0; 
 	void* most_recent_alloc;
 	double frag_size1, frag_size25, frag_size50 = 0;
-	for(; i < 50 ; ++i){
+	for(; i < 100 ; ++i){
 		number = 1;
 		if(best_or_worst == best_fit){
 			pointers[0] = best_fit_alloc(4);
