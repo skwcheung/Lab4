@@ -84,10 +84,10 @@ void test_2(void** pointers, enum test_type best_or_worst){
 	clear_mem(pointers, 10, best_or_worst);
 	switch(best_or_worst){
 		case best_fit:
-			fragmentation = best_fit_count_extfrag(1);
+			fragmentation = best_fit_count_extfrag(4);
 			break;
 		case worst_fit:
-			fragmentation = worst_fit_count_extfrag(1);
+			fragmentation = worst_fit_count_extfrag(4);
 			break;
 	}
 	if(fragmentation != 0){
@@ -124,7 +124,7 @@ void test_3(void** pointers, enum test_type best_or_worst){
 				best_fit_dealloc(pointers[3]);
 				best_fit_dealloc(pointers[5]);
 				best_fit_dealloc(pointers[7]);
-				frag_size1 += best_fit_count_extfrag(1);
+				frag_size1 += best_fit_count_extfrag(4);
 				frag_size25 += best_fit_count_extfrag(25);
 				frag_size50 += best_fit_count_extfrag(50);
 				break;
@@ -134,7 +134,7 @@ void test_3(void** pointers, enum test_type best_or_worst){
 				worst_fit_dealloc(pointers[3]);
 				worst_fit_dealloc(pointers[5]);
 				worst_fit_dealloc(pointers[7]);
-				frag_size1 += worst_fit_count_extfrag(1);
+				frag_size1 += worst_fit_count_extfrag(4);
 				frag_size25 += worst_fit_count_extfrag(25);
 				frag_size50 += worst_fit_count_extfrag(50);
 				break;
@@ -168,6 +168,8 @@ void test_4(void** pointers, enum test_type best_or_worst){
 			pointers[0] = worst_fit_alloc(100);
 			most_recent_alloc = pointers[0];
 		}
+		printf("before while\n");
+		sleep(1);
 		while(most_recent_alloc != NULL){
 			if(best_or_worst == best_fit){
 				pointers[number] = best_fit_alloc(100);
@@ -180,6 +182,8 @@ void test_4(void** pointers, enum test_type best_or_worst){
 				number++;
 			}
 		}
+		printf("after while\n");
+		sleep(1);
 		if(best_or_worst == best_fit){
 			best_fit_dealloc(pointers[0]);
 			best_fit_dealloc(pointers[2]);
@@ -193,8 +197,8 @@ void test_4(void** pointers, enum test_type best_or_worst){
 			pointers[number] = best_fit_alloc(random_number);
 			random_number = rand() % 100 + 1;
 			number++;
-			pointers[number] = worst_fit_alloc(random_number);	
-			frag_size1 += best_fit_count_extfrag(1);
+			pointers[number] = best_fit_alloc(random_number);	
+			frag_size1 += best_fit_count_extfrag(4);
 			frag_size25 += best_fit_count_extfrag(25);
 			frag_size50 += best_fit_count_extfrag(50);	
 		}
@@ -212,7 +216,7 @@ void test_4(void** pointers, enum test_type best_or_worst){
 			random_number = rand() % 100 + 1;
 			number++;
 			pointers[number] = worst_fit_alloc(random_number);
-			frag_size1 += worst_fit_count_extfrag(1);
+			frag_size1 += worst_fit_count_extfrag(4);
 			frag_size25 += worst_fit_count_extfrag(25);
 			frag_size50 += worst_fit_count_extfrag(50);
 		}
@@ -238,24 +242,22 @@ void test_5(void** pointers, enum test_type best_or_worst){
 	for(; i < 50 ; ++i){
 		number = 1;
 		if(best_or_worst == best_fit){
-			pointers[0] = best_fit_alloc(2);
+			pointers[0] = best_fit_alloc(4);
 			most_recent_alloc = pointers[0];
 		}
 		else{
-			pointers[0] = worst_fit_alloc(2);
+			pointers[0] = worst_fit_alloc(4);
 			most_recent_alloc = pointers[0];
 		}
 		while(most_recent_alloc != NULL){
 			if(best_or_worst == best_fit){
-				pointers[number] = best_fit_alloc(2);
-				most_recent_alloc = pointers[number];
-				number++;
+				pointers[number] = best_fit_alloc(4);
 			}
 			else{
-				pointers[number] = worst_fit_alloc(2);
-				most_recent_alloc = pointers[number];
-				number++;
+				pointers[number] = worst_fit_alloc(4);
 			}
+			most_recent_alloc = pointers[number];
+			number++;
 		}
 		if(best_or_worst == best_fit){
 			best_fit_dealloc(pointers[0]);
@@ -276,8 +278,8 @@ void test_5(void** pointers, enum test_type best_or_worst){
 			pointers[number] = best_fit_alloc(random_number);
 			random_number = rand() % 5 + 1;
 			number++;
-			pointers[number] = worst_fit_alloc(random_number);	
-			frag_size1 += best_fit_count_extfrag(1);
+			pointers[number] = best_fit_alloc(random_number);	
+			frag_size1 += best_fit_count_extfrag(4);
 			frag_size25 += best_fit_count_extfrag(25);
 			frag_size50 += best_fit_count_extfrag(50);	
 		}
@@ -301,7 +303,7 @@ void test_5(void** pointers, enum test_type best_or_worst){
 			random_number = rand() % 5 + 1;
 			number++;
 			pointers[number] = worst_fit_alloc(random_number);
-			frag_size1 += worst_fit_count_extfrag(1);
+			frag_size1 += worst_fit_count_extfrag(4);
 			frag_size25 += worst_fit_count_extfrag(25);
 			frag_size50 += worst_fit_count_extfrag(50);
 		}
@@ -396,12 +398,12 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
-	test_1(pointers, best_or_worst);
-	test_2(pointers, best_or_worst);
-	test_3(pointers, best_or_worst);
+	//test_1(pointers, best_or_worst);
+	//test_2(pointers, best_or_worst);
+	//test_3(pointers, best_or_worst);
 	test_4(pointers, best_or_worst);
-	test_5(pointers, best_or_worst);
-	test_7(pointers, best_or_worst);
+	//test_5(pointers, best_or_worst);
+	//test_7(pointers, best_or_worst);
 
 	return 0;
 }
