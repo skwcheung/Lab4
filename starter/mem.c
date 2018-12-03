@@ -319,7 +319,7 @@ void worst_fit_dealloc(void *ptr)
             if((itr -> next_node != NULL) && (itr->next_node->filled == 0)){ // Checking for consecutive unfilled memory spaces to join
                 combine_nodes(itr,itr->next_node);
             }
-            else if((itr -> prev_node != NULL) && (itr -> prev_node -> filled == 0)){
+            if((itr -> prev_node != NULL) && (itr -> prev_node -> filled == 0)){
                 combine_nodes(itr -> prev_node, itr);
             }
             return;
