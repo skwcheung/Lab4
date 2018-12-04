@@ -365,7 +365,7 @@ void test_6(void** pointers, enum test_type best_or_worst){
 
 //allocate 15 random sized blocks
 //deallocate them
-//repeat 100 times 
+//repeat 1000 times 
 //time how long it takes
 void test_7(void** pointers, enum test_type best_or_worst){
 	double g_time[2];
@@ -373,7 +373,7 @@ void test_7(void** pointers, enum test_type best_or_worst){
 	struct timeval tv;
 	gettimeofday(&tv, NULL);
 	g_time[0] = (tv.tv_sec) + tv.tv_usec/1000000.;
-	for(int i = 0; i < 100; ++i){
+	for(int i = 0; i < 1000; ++i){
 		for(int j = 0; j < 15; ++j){
 			random_size = rand() % 100 + 1;
 			switch(best_or_worst){
