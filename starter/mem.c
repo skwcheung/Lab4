@@ -162,7 +162,7 @@ void *best_fit_alloc(size_t size)
 		itr->filled = 1;
 		if(((intptr_t)(head->end_of_mem) - (intptr_t)(itr->next_node) < sizeof(node_t))){
 			printf("ERROR: Not enough space to create second node \n");
-			return itr;
+			return itr -> mem_start;
 		}
 		new_node = itr->next_node;
 		new_node->next_node = NULL;
@@ -232,7 +232,7 @@ void *worst_fit_alloc(size_t size)
         itr->filled = 1;
         if(((intptr_t)(head->end_of_mem) - (intptr_t)(itr->next_node) < sizeof(node_t))){
             printf("ERROR: Not enough space to create second node \n");
-            return itr;
+            return itr -> mem_start;
         }
         new_node = itr->next_node;
         new_node->next_node = NULL;

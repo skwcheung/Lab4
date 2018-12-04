@@ -301,7 +301,7 @@ void test_5(void** pointers, enum test_type best_or_worst){
 
 
 //fill with size 25 
-//deallocate 10 place between 1 and 40
+//deallocate 3 place between 1 and 40
 //allocate 3 blocks of size 1 - 25
 //check frag 1 25 50
 //repeat 100 times 
@@ -310,6 +310,57 @@ void test_6(void** pointers, enum test_type best_or_worst){
 	int random_number;
 	void* most_recent_alloc;
 	double frag_size1, frag_size25, frag_size50 = 0;
+	for(int i = 0; i < 100 ; ++i){
+		number = 1;
+		if(best_or_worst == best_fit){
+			pointers[0] = best_fit_alloc(25);
+			most_recent_alloc = pointers[0];
+		}
+		else{
+			pointers[0] = worst_fit_alloc(25);
+			most_recent_alloc = pointers[0];
+		}
+		while(most_recent_alloc != NULL){
+			if(best_or_worst == best_fit){
+				pointers[number] = best_fit_alloc(25);
+			}
+			else{
+				pointers[number] = worst_fit_alloc(25);
+			}
+			most_recent_alloc = pointers[number];
+			number++;
+		}
+		if(best_or_worst == best_fit){
+			best_fit_dealloc(pointers[0]);
+			best_fit_dealloc(pointers[2]);
+			best_fit_dealloc(pointers[3]);
+			random_number = rand() % 25 + 1;
+			pointers[0] = best_fit_alloc(random_number);
+			random_number = rand() % 25 + 1;
+			pointers[2] = best_fit_alloc(random_number);
+			random_number = rand() % 25 + 1;
+			pointers[3] = best_fit_alloc(random_number);
+			frag_size1 += best_fit_count_extfrag(4);
+			frag_size25 += best_fit_count_extfrag(25);
+			frag_size50 += best_fit_count_extfrag(50);	
+		}
+		else{
+			worst_fit_dealloc(pointers[0]);
+			worst_fit_dealloc(pointers[2]);
+			worst_fit_dealloc(pointers[3]);
+			random_number = rand() % 25 + 1;
+			pointers[0] = worst_fit_alloc(random_number);
+			random_number = rand() % 25 + 1;
+			pointers[2] = worst_fit_alloc(random_number);
+			random_number = rand() % 25 + 1;
+			pointers[3] = worst_fit_alloc(random_number);
+			frag_size1 += worst_fit_count_extfrag(4);
+			frag_size25 += worst_fit_count_extfrag(25);
+			frag_size50 += worst_fit_count_extfrag(50);
+		}
+		clear_mem(pointers, number - 1, best_or_worst);
+	}
+	printf("Test Case 6: fragmentation size 1 %lf fragmantation size 25 %lf fragmantation size 50 %lf\n",frag_size1, frag_size25, frag_size50);
 }
 
 //allocate 15 random sized blocks
@@ -393,6 +444,8 @@ int main(int argc, char *argv[])
     //print_mem(algo);
     test_5(pointers, best_or_worst);
     //print_mem(algo);
+	test_6(pointers, best_or_worst);
+	//print_mem(algo);
 	test_7(pointers, best_or_worst);
     print_mem(algo);
 	return 0;
